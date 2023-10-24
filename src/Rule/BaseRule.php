@@ -234,7 +234,7 @@ trait BaseRule
      */
     public function value($value)
     {
-        if (is_null($value)) $value = '';
+        // if (is_null($value)) $value = '';
         $this->value = $value;
         return $this;
     }
@@ -312,7 +312,7 @@ trait BaseRule
 
         if (!is_null($this->field))
             $rule['field'] = $this->field;
-        if (!is_null($this->value))
+        // if (!is_null($this->value))
             $rule['value'] = $this->value;
         if (!is_null($this->title))
             $rule['title'] = $this->title;

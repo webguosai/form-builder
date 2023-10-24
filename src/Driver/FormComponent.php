@@ -32,7 +32,8 @@ abstract class FormComponent extends CustomComponent implements FormComponentInt
     public function __construct($field, $title, $value = null)
     {
         parent::__construct();
-        $this->field($field)->title($title)->value(is_null($value) ? $this->defaultValue : $value);
+        // $this->field($field)->title($title)->value(is_null($value) ? $this->defaultValue : $value);
+        $this->field($field)->title($title)->value($value);
         if (isset(static::$propsRule['placeholder']))
             $this->placeholder($this->getPlaceHolder());
         $this->init();
