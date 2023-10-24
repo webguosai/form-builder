@@ -1,19 +1,19 @@
 <p align="center">
-    <a href="https://github.com/xaboy/form-builder">
+    <a href="https://github.com/webguosai/form-builder">
         <img width="200" src="https://camo.githubusercontent.com/39b61b302b187171ad49bc0a9305f9e79787e71a/687474703a2f2f66696c652e6c6f746b6b2e636f6d2f666f726d2d6275696c6465722e706e67">
     </a>
 </p>
 <h1 align="center">form-builder</h1>
 <p align="center">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT" />
-  <a href="https://github.com/xaboy">
-    <img src="https://img.shields.io/badge/Author-xaboy-blue.svg" alt="xaboy" />
+  <a href="https://github.com/webguosai">
+    <img src="https://img.shields.io/badge/Author-webguosai-blue.svg" alt="webguosai" />
   </a>
-  <a href="https://packagist.org/packages/xaboy/form-builder">
-    <img src="https://img.shields.io/packagist/v/xaboy/form-builder.svg" alt="version" />
+  <a href="https://packagist.org/packages/webguosai/form-builder">
+    <img src="https://img.shields.io/packagist/v/webguosai/form-builder.svg" alt="version" />
   </a>
-  <a href="https://packagist.org/packages/xaboy/form-builder">
-    <img src="https://img.shields.io/packagist/php-v/xaboy/form-builder.svg" alt="php version" />
+  <a href="https://packagist.org/packages/webguosai/form-builder">
+    <img src="https://img.shields.io/packagist/php-v/webguosai/form-builder.svg" alt="php version" />
   </a>
 </p>
 
@@ -21,8 +21,8 @@
 PHP表单生成器，快速生成现代化的form表单。包含复选框、单选框、输入框、下拉选择框等元素以及省市区三级联动、时间选择、日期选择、颜色选择、树型、文件/图片上传等功能。
 </p>
 
-![demo1](https://raw.githubusercontent.com/xaboy/form-create/dev/images/demo-live3.gif)
-![demo2](https://github.com/xaboy/form-create/raw/dev/images/demo-group.gif?raw=true)
+![demo1](https://raw.githubusercontent.com/webguosai/form-create/dev/images/demo-live3.gif)
+![demo2](https://github.com/webguosai/form-create/raw/dev/images/demo-group.gif?raw=true)
 
 ## 文档
 
@@ -44,7 +44,7 @@ PHP表单生成器，快速生成现代化的form表单。包含复选框、单�
 >  - 支持生成任何 Vue 组件
 >  - 支持栅格布局
 >  - 支持注解
->  - 可以配合 [form-create](https://github.com/xaboy/form-create) 生成更复杂的表单
+>  - 可以配合 [form-create](https://github.com/webguosai/form-create) 生成更复杂的表单
 
 ## 内置组件
 
@@ -71,14 +71,14 @@ PHP表单生成器，快速生成现代化的form表单。包含复选框、单�
 使用 [composer](http://getcomposer.org/):
 
 ```shell
-$ composer require xaboy/form-builder:~2.0
+$ composer require webguosai/form-builder:~2.0
 ```
 
 ## DEMO
 下载项目
 
 ```shell
-git clone https://github.com/xaboy/form-builder.git
+git clone https://github.com/webguosai/form-builder.git
 ```
 开启服务
 
@@ -93,7 +93,7 @@ php -S 127.0.0.1:8112
 - iview : [127.0.0.1:8112/demo/iview.php](127.0.0.1:8112/demo/iview.php)
 
 ## 演示项目
-[开源的高品质微信商城](http://github.crmeb.net/u/xaboy)
+[开源的高品质微信商城](http://github.crmeb.net/u/webguosai)
 
 演示地址: [http://demo25.crmeb.net](http://demo25.crmeb.net) 账号：demo 密码：crmeb.com
 
@@ -103,4 +103,4 @@ php -S 127.0.0.1:8112
 
 
 ## 组件生成效果
-![https://raw.githubusercontent.com/xaboy/form-builder/2.0/images/components.png](https://raw.githubusercontent.com/xaboy/form-builder/master/images/components.png)
+![https://raw.githubusercontent.com/webguosai/form-builder/2.0/images/components.png](https://raw.githubusercontent.com/webguosai/form-builder/master/images/components.png)
