@@ -108,6 +108,11 @@ trait BaseRule
     protected $effect;
 
     /**
+     * @var mixed
+     */
+    protected $update;
+
+    /**
      * 组件显示状态
      *
      * @param bool $hidden
@@ -228,6 +233,11 @@ trait BaseRule
         return $this;
     }
 
+    public function update($funStr)
+    {
+        $this->update = '[[FORM-CREATE-PREFIX-' . $funStr . '-FORM-CREATE-SUFFIX]]';
+    }
+
     /**
      * @param mixed $value
      * @return $this
@@ -313,7 +323,7 @@ trait BaseRule
         if (!is_null($this->field))
             $rule['field'] = $this->field;
         // if (!is_null($this->value))
-            $rule['value'] = $this->value;
+        $rule['value'] = $this->value;
         if (!is_null($this->title))
             $rule['title'] = $this->title;
         if (!is_null($this->className))
@@ -334,6 +344,8 @@ trait BaseRule
             $rule['visibility'] = $this->visibility;
         if (!is_null($this->col))
             $rule['col'] = $this->parseCol($this->col);
+        if (!is_null($this->update))
+            $rule['update'] = $this->update;
 
         return $rule;
     }
