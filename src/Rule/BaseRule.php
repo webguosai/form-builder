@@ -235,7 +235,8 @@ trait BaseRule
 
     public function update($funStr)
     {
-        return $this->update = '[[FORM-CREATE-PREFIX-' . $funStr . '-FORM-CREATE-SUFFIX]]';
+        $this->update = '[[FORM-CREATE-PREFIX-' . $funStr . '-FORM-CREATE-SUFFIX]]';
+        return $this;
     }
 
     /**
