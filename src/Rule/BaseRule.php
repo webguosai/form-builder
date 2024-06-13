@@ -10,345 +10,112 @@
  * @document http://php.form-create.com
  */
 
-namespace FormBuilder\Rule;
+namespace FormBuilder\Driver;
 
 
-use FormBuilder\Contract\ColComponentInterface;
+use FormBuilder\Contract\CustomComponentInterface;
+use FormBuilder\Rule\BaseRule;
+use FormBuilder\Rule\CallPropsRule;
+use FormBuilder\Rule\ChildrenRule;
+use FormBuilder\Rule\ControlRule;
+use FormBuilder\Rule\EmitRule;
+use FormBuilder\Rule\PropsRule;
+use FormBuilder\Rule\ValidateRule;
 
-trait BaseRule
+/**
+ * 自定义组件
+ * Class CustomComponent
+ */
+class CustomComponent implements CustomComponentInterface, \JsonSerializable, \ArrayAccess
 {
+    use BaseRule;
+    use ChildrenRule;
+    use EmitRule;
+    use PropsRule;
+    use ValidateRule;
+    use CallPropsRule;
+    use ControlRule;
+
+    protected static $propsRule = [];
+
+    protected $defaultProps = [];
+
+    protected $appendRule = [];
 
     /**
-     * 组件类型
-     *
-     * @var string
+     * CustomComponent constructor.
+     * @param null|string $type
      */
-    protected $type;
-
-    /**
-     * 组件字段名
-     *
-     * @var string
-     */
-    protected $field;
-
-    /**
-     * 字段昵称
-     *
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * 组件名称
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * 组件的提示信息
-     *
-     * @var string
-     */
-    protected $info;
-
-    /**
-     * 组件 class
-     *
-     * @var string
-     */
-    protected $className;
-
-    /**
-     * 是否原样生成组件,不嵌套的FormItem中
-     *
-     * @var bool
-     */
-    protected $native;
-
-    /**
-     * 事件注入时的自定义数据
-     *
-     * @var mixed
-     */
-    protected $inject;
-
-    /**
-     * 组件布局规则
-     *
-     * @var ColComponentInterface|array
-     */
-    protected $col;
-
-    /**
-     * 组件的值
-     *
-     * @var mixed
-     */
-    protected $value = '';
-
-    /**
-     * 组件显示状态
-     *
-     * @var bool
-     */
-    protected $hidden;
-
-    /**
-     * 组件显示状态
-     *
-     * @var bool
-     */
-    protected $visibility;
-
-    /**
-     * @var array
-     */
-    protected $effect;
-
-    /**
-     * @var mixed
-     */
-    protected $update;
-
-    /**
-     * 组件显示状态
-     *
-     * @param bool $hidden
-     * @return $this
-     */
-    public function hiddenStatus($hidden = true)
+    public function __construct($type = null)
     {
-        $this->hidden = !!$hidden;
+        $this->setRuleType(is_null($type) ? $this->getComponentName() : $type)->props($this->defaultProps);
+    }
+
+    public function __toString()
+    {
+        return $this->toJson();
+    }
+
+    public function __invoke()
+    {
+        return $this->build();
+    }
+
+    public function toJson()
+    {
+        return json_encode($this->build());
+    }
+
+    protected function getComponentName()
+    {
+        return lcfirst(basename(str_replace('\\', '/', get_class($this))));
+    }
+
+    public function appendRule($name, $value)
+    {
+        $this->appendRule[$name] = $name == 'props' ? (object)$value : $value;
         return $this;
     }
 
-    /**
-     * 组件显示状态
-     *
-     * @param bool $visibility
-     * @return $this
-     */
-    public function visibilityStatus($visibility = true)
+    public function getRule()
     {
-        $this->visibility = !!$visibility;
-        return $this;
+        return array_merge(
+            $this->parseBaseRule(),
+            $this->parseEmitRule(),
+            $this->parsePropsRule(),
+            $this->parseValidateRule(),
+            $this->parseChildrenRule(),
+            $this->parseControlRule()
+        );
     }
 
-    /**
-     * @param string $type
-     * @return $this
-     */
-    protected function setRuleType($type)
+    public function build()
     {
-        $this->type = (string)$type;
-        return $this;
+        return $this->appendRule + $this->getRule();
     }
 
-    /**
-     * @param string $field
-     * @return $this
-     */
-    public function field($field)
+    public function jsonSerialize(): mixed
     {
-        $this->field = (string)$field;
-        return $this;
+        return $this->build();
     }
 
-    /**
-     * @param string $title
-     * @return $this
-     */
-    public function title($title)
+    public function offsetExists($offset): bool
     {
-        $this->title = (string)$title;
-        return $this;
+        return isset($this->props[$offset]);
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function name($name)
+    public function offsetGet($offset): mixed
     {
-        $this->name = (string)$name;
-        return $this;
+        return $this->props[$offset];
     }
 
-    /**
-     * @param string $className
-     * @return $this
-     */
-    public function className($className)
+    public function offsetSet($offset, $value): void
     {
-        $this->className = (string)$className;
-        return $this;
+        $this->props[$offset] = $value;
     }
 
-    /**
-     * @param bool $native
-     * @return $this
-     */
-    public function native($native)
+    public function offsetUnset($offset): void
     {
-        $this->native = !!$native;
-        return $this;
+        unset($this->props[$offset]);
     }
-
-    /**
-     * @param mixed $inject
-     * @return $this
-     */
-    public function inject($inject)
-    {
-        $this->inject = $inject;
-        return $this;
-    }
-
-    /**
-     * @param string $info
-     * @return $this
-     */
-    public function info($info)
-    {
-        $this->info = $info;
-        return $this;
-    }
-
-    /**
-     * @param array|int|ColComponentInterface $col
-     * @return $this
-     */
-    public function col($col)
-    {
-        if (is_integer($col)) $col = ['span' => $col];
-        $this->col = $col;
-        return $this;
-    }
-
-    public function effect(array $effect)
-    {
-        $this->effect = $effect;
-        return $this;
-    }
-
-    public function update($funStr)
-    {
-        $this->update = '[[FORM-CREATE-PREFIX-' . $funStr . '-FORM-CREATE-SUFFIX]]';
-        return $this;
-    }
-
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function value($value)
-    {
-        // if (is_null($value)) $value = '';
-        $this->value = $value;
-        return $this;
-    }
-
-    public function getHiddenStatus()
-    {
-        return $this->hidden;
-    }
-
-    public function getVisibilityStatus()
-    {
-        return $this->visibility;
-    }
-
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getClassName()
-    {
-        return $this->className;
-    }
-
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    public function getNative()
-    {
-        return $this->native;
-    }
-
-    public function getInject()
-    {
-        return $this->inject;
-    }
-
-    public function getCol()
-    {
-        return $this->col;
-    }
-
-    public function getEffect()
-    {
-        return $this->effect;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    protected function parseCol($col)
-    {
-        return $col instanceof ColComponentInterface ? $col->getCol() : $col;
-    }
-
-    protected function parseBaseRule()
-    {
-        $rule = [
-            'type' => $this->type
-        ];
-
-        if (!is_null($this->field))
-            $rule['field'] = $this->field;
-        // if (!is_null($this->value))
-        $rule['value'] = $this->value;
-        if (!is_null($this->title))
-            $rule['title'] = $this->title;
-        if (!is_null($this->className))
-            $rule['className'] = $this->className;
-        if (!is_null($this->name))
-            $rule['name'] = $this->name;
-        if (!is_null($this->native))
-            $rule['native'] = $this->native;
-        if (!is_null($this->info))
-            $rule['info'] = $this->info;
-        if (!is_null($this->effect))
-            $rule['effect'] = $this->effect;
-        if (!is_null($this->inject))
-            $rule['inject'] = $this->inject;
-        if (!is_null($this->hidden))
-            $rule['hidden'] = $this->hidden;
-        if (!is_null($this->visibility))
-            $rule['visibility'] = $this->visibility;
-        if (!is_null($this->col))
-            $rule['col'] = $this->parseCol($this->col);
-        if (!is_null($this->update))
-            $rule['update'] = $this->update;
-
-        return $rule;
-    }
-
 }
