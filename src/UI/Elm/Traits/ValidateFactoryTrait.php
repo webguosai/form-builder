@@ -31,6 +31,11 @@ trait ValidateFactoryTrait
         return new Validate(Validate::TYPE_NUMBER, $trigger);
     }
 
+    public static function validateBoolean($trigger = Validate::TRIGGER_CHANGE)
+    {
+        return new Validate(Validate::TYPE_BOOLEAN, $trigger);
+    }
+
     public static function validateDate($trigger = Validate::TRIGGER_CHANGE)
     {
         return new Validate(Validate::TYPE_DATE, $trigger);

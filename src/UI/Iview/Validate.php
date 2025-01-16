@@ -23,6 +23,8 @@ class Validate implements ValidateInterface
 
     const TYPE_NUMBER = 'number';
 
+    const TYPE_BOOLEAN = 'boolean';
+
     const TYPE_INTEGER = 'integer';
 
     const TYPE_FLOAT = 'float';
