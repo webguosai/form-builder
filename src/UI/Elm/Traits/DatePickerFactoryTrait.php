@@ -42,7 +42,7 @@ trait DatePickerFactoryTrait
      */
     public static function date($field, $title, $value = '')
     {
-        return self::datePicker($field, $title, (string)$value, DatePicker::TYPE_DATE);
+        return self::datePicker($field, $title, $value, DatePicker::TYPE_DATE);
     }
 
     /**
